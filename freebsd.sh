@@ -6,6 +6,7 @@ sysrc mongod-enable=YES
 service mongod start
 
 export NODE_ENV="local"
+export PORT=8001
 
 cd /
 git clone https://github.com/naturalcrit/homebrewery.git
