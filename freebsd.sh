@@ -2,7 +2,7 @@
 
 pkg install -y git nano node npm mongodb36-3.6.20
 
-sysrc mongod-enable=YES
+sysrc mongod_enable=YES
 service mongod start
 
 export NODE_ENV="local"
