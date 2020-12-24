@@ -81,7 +81,7 @@ module.exports = [
 
 			{
 				name : 'Deck Template',
-				icon : 'fa-card',
+				icon : 'fa-star-o',
 				gen  : CardTemplateGen
 			}
 
