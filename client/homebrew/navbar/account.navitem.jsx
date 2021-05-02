@@ -21,17 +21,17 @@ const Account = createClass({
 
 	render : function(){
 		if(global.account){
-			var mailIconColor = 'blue';
-			var mailIcon = 'far fa-envelope-open';
+			let mailIconColor = 'blue';
+			let mailIcon = 'far fa-envelope-open';
 			if(this.props.newMail) {
 				mailIconColor = 'red';
 				mailIcon = 'fas fa-envelope';
 			}
 			return <Nav.section>
-					<Nav.item href={`/message/inbox/${global.account.username}`} color={`${mailIconColor}`} icon={`${mailIcon}`} />
-					<Nav.item href={`/user/${global.account.username}`} color='yellow' icon='fas fa-user'>
-						{global.account.username}
-					</Nav.item>
+				<Nav.item href={`/message/inbox/${global.account.username}`} color={`${mailIconColor}`} icon={`${mailIcon}`} />
+				<Nav.item href={`/user/${global.account.username}`} color='yellow' icon='fas fa-user'>
+					{global.account.username}
+				</Nav.item>
 				 </Nav.section>;
 		}
 
