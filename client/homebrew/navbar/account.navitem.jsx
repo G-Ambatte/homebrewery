@@ -23,7 +23,7 @@ const Account = createClass({
 		if(global.account){
 			let mailIconColor = 'blue';
 			let mailIcon = 'far fa-envelope-open';
-			if(this.props.newMail) {
+			if(this.state.newMail) {
 				mailIconColor = 'red';
 				mailIcon = 'fas fa-envelope';
 			}
