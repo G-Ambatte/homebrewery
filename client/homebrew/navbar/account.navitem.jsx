@@ -6,7 +6,7 @@ const Account = createClass({
 
 	getInitialState : function() {
 		return {
-			url : '',
+			url     : '',
 			newMail : false
 		};
 	},
