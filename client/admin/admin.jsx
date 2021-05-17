@@ -8,6 +8,8 @@ const BrewLookup = require('./brewLookup/brewLookup.jsx');
 const BrewCompress = require ('./brewCompress/brewCompress.jsx');
 const Stats = require('./stats/stats.jsx');
 
+const Message = require('./message/message.jsx');
+
 const Admin = createClass({
 	getDefaultProps : function() {
 		return {};
@@ -30,6 +32,8 @@ const Admin = createClass({
 				<BrewCleanup />
 				<hr />
 				<BrewCompress />
+				<hr />
+				<Message />
 			</div>
 		</div>;
 	}

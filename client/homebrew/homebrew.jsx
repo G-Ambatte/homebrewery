@@ -12,6 +12,8 @@ const NewPage = require('./pages/newPage/newPage.jsx');
 //const ErrorPage = require('./pages/errorPage/errorPage.jsx');
 const PrintPage = require('./pages/printPage/printPage.jsx');
 
+const MessageInboxPage = require('./pages/messagePages/inboxPage.jsx');
+
 const Homebrew = createClass({
 	getDefaultProps : function() {
 		return {
@@ -42,6 +44,7 @@ const Homebrew = createClass({
 			<Router location={this.props.url}>
 				<div className='homebrew'>
 					<Switch>
+						<Route path='/message/inbox/:username' component={(routeProps)=><MessageInboxPage username={routeProps.match.params.username} messages={this.props.brews} />}/>
 						<Route path='/edit/:id' component={(routeProps)=><EditPage id={routeProps.match.params.id} brew={this.props.brew} />}/>
 						<Route path='/share/:id' component={(routeProps)=><SharePage id={routeProps.match.params.id} brew={this.props.brew} />}/>
 						<Route path='/new/:id' component={(routeProps)=><NewPage id={routeProps.match.params.id} brew={this.props.brew} />}/>

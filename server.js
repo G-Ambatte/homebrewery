@@ -10,6 +10,8 @@ const serveCompressedStaticAssets = require('./server/static-assets.mv.js');
 const sanitizeFilename = require('sanitize-filename');
 const asyncHandler = require('express-async-handler');
 
+const messageApi = require('./server/message.api.js');
+
 //Get the brew object from the HB database or Google Drive
 const getBrewFromId = asyncHandler(async (id, accessType)=>{
 	if(accessType !== 'edit' && accessType !== 'share')
