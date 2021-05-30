@@ -366,6 +366,17 @@ const EditPage = createClass({
 					 this.state.brew.googleId + this.state.brew.shareId :
 					 this.state.brew.shareId;
 	},
+	
+	processText : function(text) {
+		//this.state.userSnippets = ['key','value', 'pagebreak','\\page\n<div class=\'pageNumber auto\'></div>'];
+		if(!this.state.userSnippets){
+			return text;
+		}
+		for(let i=0;i<this.state.userSnippets.length;i=i+2){
+			text = text.split('::['+this.state.userSnippets[i]+']').join(this.state.userSnippets[i+1]);
+		}
+		return text;
+	},
 
 	renderNavbar : function(){
 		return <Navbar>
@@ -400,6 +411,7 @@ const EditPage = createClass({
 	},
 
 	render : function(){
+		const brewText = this.processText(this.state.brew.text);
 		return <div className='editPage page'>
 			<Meta name='robots' content='noindex, nofollow' />
 			{this.renderNavbar()}
@@ -413,7 +425,7 @@ const EditPage = createClass({
 						onMetadataChange={this.handleMetadataChange}
 						renderer={this.state.brew.renderer}
 					/>
-					<BrewRenderer text={this.state.brew.text} errors={this.state.htmlErrors} renderer={this.state.brew.renderer} />
+					<BrewRenderer text={brewText} errors={this.state.htmlErrors} renderer={this.state.brew.renderer} />
 				</SplitPane>
 			</div>
 		</div>;
