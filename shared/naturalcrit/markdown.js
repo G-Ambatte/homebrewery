@@ -30,6 +30,7 @@ let blockCount = 0;
 const blockRegex = /^ *{{(?:="[\w,\-. ]*"|[^"'\s])*$|^ *}}$/gm;
 const inlineFullRegex = /{{[^\n]*}}/g;
 const inlineRegex = /{{(?:="[\w,\-. ]*"|[^"'{}}\s])*\s*|}}/g;
+const variableRegex = /^!?\[(.*)\]\:\:\s(.+)/gm;
 
 renderer.text = function(text){
 	const newText = text.replaceAll('&quot;', '"');
