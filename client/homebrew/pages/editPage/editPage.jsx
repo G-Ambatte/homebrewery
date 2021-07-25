@@ -3,7 +3,7 @@ require('./editPage.less');
 const React = require('react');
 const createClass = require('create-react-class');
 const _ = require('lodash');
-const request = require('superagent');
+//const request = require('superagent');
 const { Meta } = require('vitreum/headtags');
 
 const Markdown = require('naturalcrit/markdown.js');
@@ -19,6 +19,7 @@ const AccountNavItem = require('../../navbar/account.navitem.jsx');
 
 const SplitPane = require('naturalcrit/splitPane/splitPane.jsx');
 const Editor = require('../../editor/editor.jsx');
+const BrewActions = require('../../editor/brewActions.jsx');
 const BrewRenderer = require('../../brewRenderer/brewRenderer.jsx');
 
 const googleDriveActive = require('../../googleDrive.png');
@@ -204,7 +205,7 @@ const EditPage = createClass({
 			saveGoogle : !prevState.saveGoogle,
 			isSaving   : false,
 			errors     : null
-		}), ()=> {
+		}), ()=>{
 			if(this.isEdit())
 				this.transferBrew();
 		});
@@ -221,127 +222,38 @@ const EditPage = createClass({
 		const brewToTransfer = this.state.brew;
 
 		if(this.state.saveGoogle) {
-			const res = await this.saveGoogleBrew(brewToTransfer);
+			const res = await BrewActions.saveGoogleBrew(brewToTransfer);
 			if(res) {
-				await this.setState({
-					googleId : res.body.googleId
-				});
+				await this.setState((prevState)=>({
+					brew : _.merge({}, prevState.brew, {
+						googleId : res.body.googleId,
+						editId 	 : res.body.editId,
+						shareId  : res.body.shareId
+					})
+				}));
 			} else {
 				return;
 			}
 
 			console.log('Deleting Local copy');
-			await this.deleteBrew(brewToTransfer);
+			await BrewActions.deleteBrew(brewToTransfer);
 
 			this.savedBrew = res.body;
 			history.replaceState(null, null, `/edit/${this.savedBrew.googleId}${this.savedBrew.editId}`); //update URL to match doc ID
 		} else {
-			const res = await this.saveBrew(brewToTransfer);
+			const res = await BrewActions.saveBrew(brewToTransfer);
 
 			if(!res) { return; }
 
 			console.log('Deleting Google copy');
-			await this.deleteGoogleBrew(brewToTransfer);
+			await BrewActions.deleteGoogleBrew(brewToTransfer);
 
 			this.savedBrew = res.body;
 			history.replaceState(null, null, `/edit/${this.savedBrew.editId}`); //update URL to match doc ID
 		}
 	},
 
-	saveBrew : async function(brewToSave) {
-		const res = await request
-							.post('/api')
-							.send(brewToSave)
-							.catch((err)=>{
-								alert('Error while saving!');
-								this.setState({
-									errors   : err,
-									isSaving : false
-								});
-								return;
-							});
-		this.setState((prevState)=>({
-			brew : _.merge({}, prevState.brew, {
-				googleId : '',
-				editId 	 : res.body.editId,
-				shareId  : res.body.shareId
-			})
-		}));
-		return res;
-	},
 
-	saveGoogleBrew : async function(brewToSave) {
-		const res = await request
-					.post('/api/newGoogle/')
-					.send(brewToSave)
-					.catch((err)=>{
-						alert(err.status === 401
-							? 'Not signed in!'
-							: 'Error Saving to Google Brew!');
-						this.setState({
-							errors     : err,
-							isSaving   : false,
-							saveGoogle : false
-						});
-						return;
-					});
-		this.setState((prevState)=>({
-			brew : _.merge({}, prevState.brew, {
-				googleId : res.body.googleId,
-				editId 	 : res.body.editId,
-				shareId  : res.body.shareId
-			})
-		}));
-		return res;
-	},
-
-	deleteBrew : async function(brewToDelete) {
-		const res = await request.delete(`/api/${brewToDelete.editId}`)
-					.send()
-					.catch((err)=>{
-						console.log('Error deleting Local Copy');
-						// TODO: setState errors: err, as per saveBrew/saveGoogleBrew???
-						return;
-					});
-		return res;
-	},
-
-	deleteGoogleBrew : async function(brewToDelete) {
-		const res = await request.get(`/api/removeGoogle/${brewToDelete.googleId}${brewToDelete.editId}`)
-					.send()
-					.catch((err)=>{
-						console.log('Error Deleting Google Brew');
-						// TODO: setState errors: err, as per saveBrew/saveGoogleBrew???
-						return;
-					});
-		return res;
-	},
-
-	updateBrew : async function(brewToUpdate) {
-		const res = await request
-					.put(`/api/update/${brewToUpdate.editId}`)
-					.send(brewToUpdate)
-					.catch((err)=>{
-						console.log('Error Updating Local Brew');
-						this.setState({ errors: err });
-						return;
-					});
-		return res;
-	},
-
-	updateGoogleBrew : async function(brewToUpdate) {
-		const res = await request
-					.put(`/api/updateGoogle/${brewToUpdate.editId}`)
-					.send(brewToUpdate)
-					.catch((err)=>{
-						console.log(err.status === 401
-							? 'Not signed in!'
-							: 'Error Saving to Google!');
-						this.setState({ errors: err });
-						return;
-					});
-		return res;
-	},
 
 	save : async function(){
 		if(this.debounceSave && this.debounceSave.cancel) this.debounceSave.cancel();
@@ -363,11 +275,11 @@ const EditPage = createClass({
 
 			let editUrl = '';
 			if(this.state.saveGoogle) {
-				const res = await this.saveGoogleBrew(brewToSave);
+				const res = await BrewActions.saveGoogleBrew(brewToSave);
 				this.savedBrew = res.body;
 				editUrl = `/edit/${this.savedBrew.googleId}${this.savedBrew.editId}`;
 			} else {
-				const res = await this.saveBrew(brewToSave);
+				const res = await BrewActions.saveBrew(brewToSave);
 				window.onbeforeunload = function(){};
 				this.savedBrew = res.body;
 				editUrl = `/edit/${this.savedBrew.editId}`;
@@ -377,10 +289,10 @@ const EditPage = createClass({
 		}
 		if(this.isEdit())	{
 			if(this.state.saveGoogle) {
-				const res = await this.updateGoogleBrew(brewToSave);
+				const res = await BrewActions.updateGoogleBrew(brewToSave);
 				this.savedBrew = res.body;
 			} else {
-				const res = await this.updateBrew(brewToSave);
+				const res = await BrewActions.updateBrew(brewToSave);
 				this.savedBrew = res.body;
 			}
 		}
