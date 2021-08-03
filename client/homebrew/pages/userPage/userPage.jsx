@@ -39,14 +39,16 @@ const UserPage = createClass({
 		return `${this.props.username}'s`;
 	},
 
-	renderBrews : function(brews){
+	renderBrews : function(brews, groupClass=''){
 		if(!brews || !brews.length) return <div className='noBrews'>No Brews.</div>;
 
 		const sortedBrews = this.sortBrews(brews, this.state.sortType);
 
-		return _.map(sortedBrews, (brew, idx)=>{
-			return <BrewItem brew={brew} key={idx}/>;
-		});
+		return <div className={`${groupClass}`}>
+			{_.map(sortedBrews, (brew, idx)=>{
+				return <BrewItem brew={brew} key={idx}/>;
+			})}
+		</div>;
 	},
 
 	sortBrewOrder : function(brew){
@@ -139,14 +141,13 @@ const UserPage = createClass({
 
 			<div className='content V3'>
 				<div className='phb'>
-					{this.renderSortOptions()}
 					<div>
 						<h1>{this.getUsernameWithS()} brews</h1>
-						{this.renderBrews(brews.published)}
+						{this.renderBrews(brews.published, 'published')}
 					</div>
 					<div>
 						<h1>{this.getUsernameWithS()} unpublished brews</h1>
-						{this.renderBrews(brews.private)}
+						{this.renderBrews(brews.private, 'private')}
 					</div>
 				</div>
 			</div>
