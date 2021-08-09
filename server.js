@@ -228,7 +228,8 @@ app.use((req, res)=>{
 		brews       : req.brews,
 		googleBrews : req.googleBrews,
 		account     : req.account,
-		enable_v3   : config.get('enable_v3')
+		enable_v3   : config.get('enable_v3'),
+		environment : process.env.NODE_ENV
 	};
 	templateFn('homebrew', title = req.brew ? req.brew.title : '', props)
         .then((page)=>{ res.send(page); })

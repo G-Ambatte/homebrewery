@@ -26,7 +26,8 @@ const Account = createClass({
 	},
 
 	clearCookie : function(){
-		document.cookie = `nc_session=''; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; domain=${window.domain}`;
+		alert(this.props.environment);
+		//document.cookie = `nc_session=''; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
 	},
 
 	renderDropdown : function(){
@@ -42,18 +43,25 @@ const Account = createClass({
 	},
 
 	render : function(){
-		const href  = (global.account?.username ? `/user/${global.account.username}` : `https://www.naturalcrit.com/login?redirect=${this.state.url}`);
-		const color = (global.account?.username ? 'yellow' : 'teal');
-		const icon  = (global.account?.username ? 'fas fa-user' : 'fas fa-sign-in-alt');
-		const text  = (global.account?.username || 'Log In');
+		const opts  = (global.account?.username ? {
+			'href'  : `/user/${global.account.username}`,
+			'color' : 'yellow',
+			'icon'  : 'fas fa-user',
+			'text'  : global.account?.username
+		} : {
+			'href'  : `https://www.naturalcrit.com/login?redirect=${this.state.url}`,
+			'color' : 'teal',
+			'icon'  : 'fas fa-sign-in-alt',
+			'text'  : 'Log In'
+		});
 		return <Nav.section className='account'>
 			<Nav.item
-				href={href}
-				color={color}
-				icon={icon}
+				href={opts['href']}
+				color={opts['color']}
+				icon={opts['icon']}
 				onMouseEnter={()=>this.handleDropdown(true)}
 				onMouseLeave={()=>this.handleDropdown(false)} >
-				{text}
+				{opts['text']}
 				{this.renderDropdown()}
 			</Nav.item>
 		</Nav.section>;
