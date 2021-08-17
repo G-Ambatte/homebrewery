@@ -168,7 +168,9 @@ GoogleActions = {
 			.catch((err)=>{
 				console.log('Error saving to google');
 				console.error(err);
-				throw (err);
+				brew.error = err;
+				alert (err);
+				return brew;
 				//return res.status(500).send('Error while saving');
 			});
 		}
@@ -247,14 +249,17 @@ GoogleActions = {
 
 		const drive = google.drive({ version: 'v3', auth: auth });
 
+		let brew = {};
+
 		const obj = await drive.files.get({
 			fileId : id,
 			fields : 'properties, createdTime, modifiedTime, description, trashed'
 		})
 		.catch((err)=>{
 			console.log('Error loading from Google');
-			throw (err);
-			return;
+			brew.errors = err;
+			alert (err);
+			return brew;
 		});
 
 		if(obj) {
@@ -283,9 +288,11 @@ GoogleActions = {
 			.catch((err)=>{
 				console.log('Error getting file contents from Google');
 				console.error(err);
+				brew.errors = err;
+				return brew;
 			});
 
-			const brew = {
+			brew = {
 				shareId : obj.data.properties.shareId,
 				editId  : obj.data.properties.editId,
 				title   : obj.data.properties.title,
@@ -309,7 +316,7 @@ GoogleActions = {
 				googleId : id
 			};
 
-			return (brew);
+			return brew;
 		}
 	},
 
