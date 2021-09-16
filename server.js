@@ -149,6 +149,7 @@ app.get('/faq', async (req, res, next)=>{
 	const brew = {
 		title    : 'FAQ',
 		text     : faqText,
+		style    : '.page { height:unset; column-count:1; -webkit-column-count:1; -moz-column-count:1 }',
 		renderer : 'V3'
 	};
 	splitTextAndStyle(brew);
