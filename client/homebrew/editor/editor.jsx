@@ -69,6 +69,8 @@ const Editor = createClass({
 	},
 
 	handleInject : function(injectText){
+		console.log(`Page: ${this.getCurrentPage()}`);
+		console.log(`Cursor Position - Line: ${this.refs.codeEditor.getCursorPosition()?.line}`);
 		let text;
 		if(this.isText())  text = this.props.brew.text;
 		if(this.isStyle()) text = this.props.brew.style ?? DEFAULT_STYLE_TEXT;
@@ -91,7 +93,7 @@ const Editor = createClass({
 	},
 
 	getCurrentPage : function(){
-		const lines = this.props.brew.text.split('\n').slice(0, this.cursorPosition.line + 1);
+		const lines = this.props.brew.text.split('\n').slice(0, this.refs.codeEditor.getCursorPosition()?.line + 1);
 		return _.reduce(lines, (r, line)=>{
 			if(line.indexOf('\\page') !== -1) r++;
 			return r;
