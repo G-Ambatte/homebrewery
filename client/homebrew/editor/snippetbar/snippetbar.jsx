@@ -25,7 +25,9 @@ const Snippetbar = createClass({
 			renderer        : 'legacy',
 			undo            : ()=>{},
 			redo            : ()=>{},
-			historySize     : ()=>{}
+			historySize     : ()=>{},
+			getCurrentPage  : ()=>{},
+			maxPages        : 1
 		};
 	},
 
@@ -63,6 +65,16 @@ const Snippetbar = createClass({
 		if(!this.props.showEditButtons) return;
 
 		return <div className='editors'>
+			<div className={`editorTool prevPage ${this.props.maxPages}`}
+				onClick={this.props.pageBack}>
+				<i className='fas fa-caret-left' />
+			</div>
+			<div className='currentPage'>{this.props.getCurrentPage}</div>
+			<div className={`editorTool nextPage ${this.props.maxPages}`}
+				onClick={this.props.pageFwd}>
+				<i className='fas fa-caret-right' />
+			</div>
+			<div className='divider'></div>
 			<div className={`editorTool undo ${this.props.historySize.undo ? 'active' : ''}`}
 				onClick={this.props.undo} >
 				<i className='fas fa-undo' />

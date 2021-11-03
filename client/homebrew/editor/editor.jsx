@@ -95,11 +95,16 @@ const Editor = createClass({
 	},
 
 	getCurrentPage : function(){
-		const lines = this.props.brew.text.split('\n').slice(0, this.cursorPosition.line + 1);
+		const lines = this.props.brew.text.split('\n').slice(0, this.refs.codeEditor?.getCursorPosition().line + 1);
 		return _.reduce(lines, (r, line)=>{
 			if(line.indexOf('\\page') !== -1) r++;
 			return r;
 		}, 1);
+	},
+
+	getTotalPages : function(){
+		const pageCount = this.props.brew.text.split('\\page').length;
+		return pageCount;
 	},
 
 	highlightCustomMarkdown : function(){
@@ -246,7 +251,9 @@ const Editor = createClass({
 					renderer={this.props.renderer}
 					undo={this.undo}
 					redo={this.redo}
-					historySize={this.historySize()} />
+					historySize={this.historySize()}
+					getCurrentPage={this.getCurrentPage()}
+					maxPages={this.getTotalPages()} />
 
 				{this.renderEditor()}
 			</div>
