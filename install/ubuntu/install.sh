@@ -1,16 +1,16 @@
 #!/bin/sh
 
 # Check for valid Ubuntu release parameter
-do
-    case "$1" in
-      "bionic"|"xenial")
-        targetRelease=$1
-        ;;
-      not_an_item)
-        targetRelease="focal"
-        ;;
-    esac
-done
+
+case "$1" in
+    "bionic"|"xenial")
+    targetRelease=$1
+    ;;
+    not_an_item)
+    targetRelease="focal"
+    ;;
+esac
+
 echo ::
 echo :: Install release set to $targetRelease
 echo ::
