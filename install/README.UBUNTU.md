@@ -24,11 +24,13 @@ These instructions assume that you are installing to a completely new, fresh Ubu
 
 These installation instructions have been tested on the following Ubuntu releases:
 
-- *ubuntu-20.04.3-desktop-amd64*
+Ubuntu 20.04.3 (Focal Fossa):
+- *ubuntu-20.04.3-desktop-amd64* : https://www.youtube.com/watch?v=RtCKd3Dztsg
+- *ubuntu-20.04.3-live-server-amd64* : https://www.youtube.com/watch?v=djVXaFYK9tM
 
 ## Final Notes
 
-While this installation process works successfully at the time of writing (December 19, 2021), it relies on all of the Node.JS packages used in the HomeBrewery project retaining their cross-platform capabilities to continue to function. This is one of the inherent advantages of Node.JS, but it is by no means guaranteed and as such, functionality or even installation may fail without warning at some point in the future.
+While this installation process works successfully at the time of writing (January 13, 2022), it relies on all of the packages and dependencies used in the HomeBrewery project retaining their cross-platform capabilities to continue to function. This is one of the inherent advantages of the MERN stack that Homebrewery is built on, but it is by no means guaranteed and as such, functionality or even installation may fail without warning at some point in the future.
 
 Regards,  
 G  
