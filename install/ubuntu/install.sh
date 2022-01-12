@@ -6,7 +6,7 @@ case "$1" in
     "bionic"|"xenial")
     targetRelease=$1
     ;;
-    not_an_item)
+    *)
     targetRelease="focal"
     ;;
 esac
@@ -17,10 +17,10 @@ echo ::
 
 # Install CURL and add required NodeJS source to package repo
 echo ::
-echo :: Install CURL & WGET
+echo :: Install CURL
 echo ::
 
-apt install -y curl wget
+apt install -y curl
 
 echo ::
 echo :: Add NodeJS source to package repo
