@@ -2,7 +2,7 @@
 
 # Check for valid Ubuntu release parameter
 
-case "$1" in
+case `echo "${1,,}"` in
     "bionic"|"xenial")
     targetRelease=$1
     ;;
