@@ -2,14 +2,20 @@
 
 # Check for valid Ubuntu release parameter
 
-case `echo "${1,,}"` in
-    "bionic"|"xenial")
-    targetRelease=$1
-    ;;
-    *)
-    targetRelease="focal"
-    ;;
-esac
+targetRelease = "focal"
+if $1
+then
+    case `echo "${1,,}"` in
+        "focal"|"bionic"|"xenial")
+        targetRelease=$1
+        ;;
+        *)
+        echo "Unknown target release: $1"
+        echo "Valid options are 'focal', 'bionic', or 'xenial'"
+        exit 1
+        ;;
+    esac
+fi
 
 echo ::
 echo :: Install release set to $targetRelease
