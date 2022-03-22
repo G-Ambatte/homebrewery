@@ -5,11 +5,6 @@ const app = supertest.agent(require('app.js').app)
     .set('X-Forwarded-Proto', 'https');
 
 describe('Tests for static pages', ()=>{
-	beforeAll(async ()=>{
-		console.log('Initialization');
-		return await app.get('/').expect(200);
-	});
-
 	it('Home page works', ()=>{
 		return app.get('/').expect(200);
 	});
