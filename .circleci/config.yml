@@ -55,6 +55,9 @@ jobs:
       - attach_workspace:
           at: .
 
+      - run:
+          name: Wait for Express
+          command: dockerize -wait tcp://127.0.0.1:80 -timeout 1m
       # run tests!
       - run: 
           name: Test-Basic
