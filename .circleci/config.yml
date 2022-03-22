@@ -49,7 +49,7 @@ jobs:
 
     working_directory: ~/homebrewery
     executor: node/default
-    parallelism: 1
+    parallelism: 3
 
     steps:
       - attach_workspace:
@@ -57,8 +57,14 @@ jobs:
 
       # run tests!
       - run: 
-          name: Tests
-          command: npm run test-verbose
+          name: Test-Basic
+          command: npm run test-basic
+      - run:
+          name: Test-Mustache-Span
+          command: npm run test-mustache-span
+      - run:
+          name: Test-Routes
+          command: npm run test-routes
 
 workflows:
   build_and_test:
