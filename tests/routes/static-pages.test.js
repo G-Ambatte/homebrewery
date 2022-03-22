@@ -1,8 +1,14 @@
 const supertest = require('supertest');
 
+const startTime = performance.now();
+
 // Mimic https responses to avoid being redirected all the time
 const app = supertest.agent(require('app.js').app)
     .set('X-Forwarded-Proto', 'https');
+
+const endTime = performance.now();
+
+console.debug(`Initialization of the app and supertest took ${endTime - startTime} milliseconds`);
 
 describe('Tests for static pages', ()=>{
 	it('Home page works', ()=>{
