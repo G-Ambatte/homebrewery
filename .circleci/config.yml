@@ -49,6 +49,7 @@ jobs:
       - image: circleci/mongo:4.4
 
     working_directory: ~/homebrewery
+    executor: node/default
     parallelism: 1
 
     steps:

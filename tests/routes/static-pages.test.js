@@ -5,13 +5,13 @@ const app = supertest.agent(require('app.js').app)
     .set('X-Forwarded-Proto', 'https');
 
 describe('Tests for static pages', ()=>{
-	it('Home page v3 works', ()=>{
-		return app.get('/v3_preview').expect(200);
-	}, 15000);
-
 	it('Home page works', ()=>{
 		return app.get('/').expect(200);
 	}, 15000);
+
+	it('Home page v3 works', ()=>{
+		return app.get('/v3_preview').expect(200);
+	});
 
 	it('Changelog page works', ()=>{
 		return app.get('/changelog').expect(200);
