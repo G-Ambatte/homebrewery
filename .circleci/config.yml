@@ -56,8 +56,8 @@ jobs:
           at: .
 
       - run:
-          name: Wait for Express
-          command: dockerize -wait tcp://mongodb:27017 -timeout 1m
+          name: Wait for MongoDB
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
           name: Wait for Express
           command: dockerize -wait tcp://127.0.0.1:80 -timeout 1m
