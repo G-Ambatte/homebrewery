@@ -61,7 +61,7 @@ jobs:
 
       - run:
           name: Wait for MongoDB
-          command: dockerize -wait tcp://localhost:27017 -timeout 
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
           name: Start app
           command: node server.js
