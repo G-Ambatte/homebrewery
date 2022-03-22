@@ -64,7 +64,7 @@ jobs:
           command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
           name: Start app
-          command: node server.js
+          command: nohup node server.js &
       - run:
           name: Wait for Express
           command: dockerize -wait tcp://localhost:80 -timeout 1m
