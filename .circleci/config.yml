@@ -46,6 +46,10 @@ jobs:
   test:
     docker:
       - image: circleci/node:16.10.0
+      - image: circleci/mongo:4.4
+        environment:
+          MONGO_USERNAME: mongouser
+          MONGO_PASSWORD: mongopass
 
     working_directory: ~/homebrewery
     executor: node/default
@@ -57,10 +61,13 @@ jobs:
 
       - run:
           name: Wait for MongoDB
-          command: dockerize -wait tcp://localhost:27017 -timeout 1m
+          command: dockerize -wait tcp://localhost:27017 -timeout 
+      - run:
+          name: Start app
+          command: node server.js
       - run:
           name: Wait for Express
-          command: dockerize -wait tcp://127.0.0.1:80 -timeout 1m
+          command: dockerize -wait tcp://localhost:80 -timeout 1m
       # run tests!
       - run: 
           name: Test-Basic
