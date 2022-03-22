@@ -46,10 +46,6 @@ jobs:
   test:
     docker:
       - image: circleci/node:16.10.0
-      - image: circleci/mongo:4.4
-        environment:
-          MONGO_USERNAME: mongouser
-          MONGO_PASSWORD: mongopass
 
     working_directory: ~/homebrewery
     executor: node/default
@@ -59,9 +55,6 @@ jobs:
       - attach_workspace:
           at: .
 
-      - run:
-          name: Wait for MongoDB
-          command: dockerize -wait tcp://localhost:27017 -timeout 1m
       # run tests!
       - run: 
           name: Test-Basic
