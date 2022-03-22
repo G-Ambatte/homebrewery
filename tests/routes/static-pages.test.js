@@ -4,17 +4,12 @@ const supertest = require('supertest');
 const app = supertest.agent(require('app.js').app)
     .set('X-Forwarded-Proto', 'https');
 
-before(function (done) {
-	app.on('listening', function(){
-		done();
-	});
+beforeAll(()=>{
+	console.log('before-all');
+	app.get('/').expect(200);
 });
 
 describe('Tests for static pages', ()=>{
-	it('Init check', ()=>{
-		return app.get('/').expect(200);
-	}, 60000);
-
 	it('Home page works', ()=>{
 		return app.get('/').expect(200);
 	}, 15000);
