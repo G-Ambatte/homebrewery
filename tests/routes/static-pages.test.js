@@ -4,7 +4,7 @@ const supertest = require('supertest');
 const app = supertest.agent(require('app.js').app)
     .set('X-Forwarded-Proto', 'https');
 
-request(app)
+supertest(app)
 	.get('/')
 	.expect(200)
 	.end(function(err, res) {
