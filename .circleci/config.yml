@@ -67,7 +67,7 @@ jobs:
           command: nohup node server.js &
       - run:
           name: Wait for Express
-          command: dockerize -wait tcp://localhost:80 -timeout 1m
+          command: dockerize -wait tcp://localhost:8000 -timeout 1m
       # run tests!
       - run: 
           name: Test-Basic
