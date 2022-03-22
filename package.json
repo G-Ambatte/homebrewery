@@ -19,6 +19,7 @@
     "circleci": "npm test && eslint **/*.{js,jsx} --max-warnings=0",
     "verify": "npm run lint && npm test",
     "test": "jest",
+    "test-verbose" : "jest --verbose",
     "test:dev": "jest --verbose --watch",
     "phb": "node scripts/phb.js",
     "prod": "set NODE_ENV=production && npm run build",
