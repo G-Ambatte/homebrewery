@@ -8,6 +8,7 @@ const CoverPageGen = require('./coverpage.gen.js');
 const TableOfContentsGen = require('./tableOfContents.gen.js');
 const dedent = require('dedent-tabs').default;
 const watercolorGen = require('./watercolor.gen.js');
+const promptGen = require('./prompt.gen.js');
 
 
 module.exports = [
@@ -247,6 +248,11 @@ module.exports = [
 						}}
 						\n`;
 				},
+			},
+			{
+				name : 'Quest Prompts',
+				icon : 'fas fa-book-dead',
+				gen  : promptGen.questList
 			},
 		]
 	},
