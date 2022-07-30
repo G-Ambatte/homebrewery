@@ -7,17 +7,17 @@ const markdown = require('../../../shared/naturalcrit/markdown.js');
 const PAGE_START = 2;
 
 module.exports = {
-    markdown: markdown,
-    // Split the \page tag into separate divs and run the segments through the homebrewery markdown parser
-    render: (rawBrewText)=>{
-        let result = '';
-        rawBrewText.split('\\page').forEach((instance, index)=>{
-            result += `<div class="page" id="p${index + PAGE_START}">${markdown.render(instance)}</div>\n`;
-        });
-        result = `<div class="pages">\n${result}</div>`;
-        return result;
-    },
-    validate : (rawBrewText)=>{
-        return markdown.validate(rawBrewText);
-    }
-}
+	markdown : markdown,
+	// Split the \page tag into separate divs and run the segments through the homebrewery markdown parser
+	render   : (rawBrewText)=>{
+		let result = '';
+		rawBrewText.split('\\page').forEach((instance, index)=>{
+			result += `<div class="page" id="p${index + PAGE_START}">${markdown.render(instance)}</div>\n`;
+		});
+		result = `<div class="pages">\n${result}</div>`;
+		return result;
+	},
+	validate : (rawBrewText)=>{
+		return markdown.validate(rawBrewText);
+	}
+};
