@@ -1,9 +1,13 @@
+/*eslint max-lines: ["warn", {"max": 300, "skipBlankLines": true, "skipComments": true}]*/
 require('./metadataEditor.less');
 const React = require('react');
 const createClass = require('create-react-class');
 const _     = require('lodash');
 const cx    = require('classnames');
 const request = require('superagent');
+const Nav = require('naturalcrit/nav/nav.jsx');
+
+const Themes = require('themes/themes.json');
 
 const SYSTEMS = ['5e', '4e', '3.5e', 'Pathfinder'];
 
@@ -21,7 +25,8 @@ const MetadataEditor = createClass({
 				published   : false,
 				authors     : [],
 				systems     : [],
-				renderer    : 'legacy'
+				renderer    : 'legacy',
+				theme       : '5ePHB'
 			},
 			onChange : ()=>{}
 		};
@@ -60,6 +65,8 @@ const MetadataEditor = createClass({
 	handleRenderer : function(renderer, e){
 		if(e.target.checked){
 			this.props.metadata.renderer = renderer;
+			if(renderer == 'legacy')
+				this.props.metadata.theme = '5ePHB';
 		}
 		this.props.onChange(this.props.metadata);
 	},
@@ -67,6 +74,12 @@ const MetadataEditor = createClass({
 		this.props.onChange(_.merge({}, this.props.metadata, {
 			published : val
 		}));
+	},
+
+	handleTheme : function(theme){
+		this.props.metadata.renderer = theme.renderer;
+		this.props.metadata.theme    = theme.path;
+		this.props.onChange(this.props.metadata);
 	},
 
 	handleDelete : function(){
@@ -132,6 +145,44 @@ const MetadataEditor = createClass({
 			<div className='value'>
 				{text}
 			</div>
+		</div>;
+	},
+
+	renderThemeDropdown : function(){
+		const listThemes = (renderer)=>{
+			return _.map(_.values(Themes[renderer]), (theme)=>{
+				console.log(theme);
+				return <div className='item' key={''} onClick={()=>this.handleTheme(theme)} title={''}>
+					{`${theme.renderer} : ${theme.name}`}
+					<img src={`/themes/${theme.renderer}/${theme.path}/dropdownTexture.png`}/>
+				</div>;
+			});
+		};
+
+		const currentTheme = Themes[`${_.upperFirst(this.props.metadata.renderer)}`][this.props.metadata.theme];
+		let dropdown;
+
+		if(this.props.metadata.renderer == 'legacy') {
+			dropdown =
+				<Nav.dropdown className='disabled' trigger='disabled'>
+					<div>
+						{`Themes are not supported in the Legacy Renderer`} <i className='fas fa-caret-down'></i>
+					</div>
+				</Nav.dropdown>;
+		} else {
+			dropdown =
+				<Nav.dropdown trigger='click'>
+					<div>
+						{`${_.upperFirst(currentTheme.renderer)} : ${currentTheme.name}`} <i className='fas fa-caret-down'></i>
+					</div>
+					{/*listThemes('Legacy')*/}
+					{listThemes('V3')}
+				</Nav.dropdown>;
+		}
+
+		return <div className='field themes'>
+			<label>theme</label>
+			{dropdown}
 		</div>;
 	},
 
@@ -209,6 +260,8 @@ const MetadataEditor = createClass({
 					{this.renderSystems()}
 				</div>
 			</div>
+
+			{this.renderThemeDropdown()}
 
 			{this.renderRenderOptions()}
 
