@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
 
 const MagicGen           = require('./snippets/magic.gen.js');
-const ClassTableGen      = require('./snippets/classtable.gen.js');
-const MonsterBlockGen    = require('./snippets/monsterblock.gen.js');
-const ClassFeatureGen    = require('./snippets/classfeature.gen.js');
-const CoverPageGen       = require('./snippets/coverpage.gen.js');
-const TableOfContentsGen = require('./snippets/tableOfContents.gen.js');
-const WatercolorGen      = require('./snippets/watercolor.gen.js');
+// const ClassTableGen      = require('./snippets/classtable.gen.js');
+// const MonsterBlockGen    = require('./snippets/monsterblock.gen.js');
+// const ClassFeatureGen    = require('./snippets/classfeature.gen.js');
+// const CoverPageGen       = require('./snippets/coverpage.gen.js');
+// const TableOfContentsGen = require('./snippets/tableOfContents.gen.js');
+// const WatercolorGen      = require('./snippets/watercolor.gen.js');
 const dedent             = require('dedent-tabs').default;
 
 
