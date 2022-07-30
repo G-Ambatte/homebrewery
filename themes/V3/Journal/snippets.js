@@ -75,11 +75,11 @@ module.exports = [
 				icon : 'fas fa-link',
 				gen  : '[Click here](#p3) to go to page 3\n'
 			},
-			{
-				name : 'Table of Contents',
-				icon : 'fas fa-book',
-				gen  : TableOfContentsGen
-			},
+			// {
+			// 	name : 'Table of Contents',
+			// 	icon : 'fas fa-book',
+			// 	gen  : TableOfContentsGen
+			// },
 			{
 				name : 'Add Comment',
 				icon : 'fas fa-code',
@@ -151,11 +151,11 @@ module.exports = [
 					[naturalcrit](https://homebrew.naturalcrit.com)
 					}}`
 			},
-			{
-				name : 'Watercolor Splatter',
-				icon : 'fas fa-fill-drip',
-				gen  : WatercolorGen,
-			},
+			// {
+			// 	name : 'Watercolor Splatter',
+			// 	icon : 'fas fa-fill-drip',
+			// 	gen  : WatercolorGen,
+			// },
 			{
 				name : 'Watermark',
 				icon : 'fas fa-id-card',
@@ -183,11 +183,11 @@ module.exports = [
 				icon : 'fas fa-scroll',
 				gen  : MagicGen.spellList,
 			},
-			{
-				name : 'Class Feature',
-				icon : 'fas fa-mask',
-				gen  : ClassFeatureGen,
-			},
+			// {
+			// 	name : 'Class Feature',
+			// 	icon : 'fas fa-mask',
+			// 	gen  : ClassFeatureGen,
+			// },
 			{
 				name : 'Note',
 				icon : 'fas fa-sticky-note',
@@ -216,26 +216,26 @@ module.exports = [
 						\n`;
 				},
 			},
-			{
-				name : 'Monster Stat Block (unframed)',
-				icon : 'fas fa-paw',
-				gen  : MonsterBlockGen.monster('monster', 2),
-			},
-			{
-				name : 'Monster Stat Block',
-				icon : 'fas fa-spider',
-				gen  : MonsterBlockGen.monster('monster,frame', 2),
-			},
-			{
-				name : 'Wide Monster Stat Block',
-				icon : 'fas fa-dragon',
-				gen  : MonsterBlockGen.monster('monster,frame,wide', 4),
-			},
-			{
-				name : 'Cover Page',
-				icon : 'fas fa-file-word',
-				gen  : CoverPageGen,
-			},
+			// {
+			// 	name : 'Monster Stat Block (unframed)',
+			// 	icon : 'fas fa-paw',
+			// 	gen  : MonsterBlockGen.monster('monster', 2),
+			// },
+			// {
+			// 	name : 'Monster Stat Block',
+			// 	icon : 'fas fa-spider',
+			// 	gen  : MonsterBlockGen.monster('monster,frame', 2),
+			// },
+			// {
+			// 	name : 'Wide Monster Stat Block',
+			// 	icon : 'fas fa-dragon',
+			// 	gen  : MonsterBlockGen.monster('monster,frame,wide', 4),
+			// },
+			// {
+			// 	name : 'Cover Page',
+			// 	icon : 'fas fa-file-word',
+			// 	gen  : CoverPageGen,
+			// },
 			{
 				name : 'Magic Item',
 				icon : 'fas fa-hat-wizard',
@@ -325,36 +325,36 @@ module.exports = [
 						\n`;
 				}
 			},
-			{
-				name : 'Class Table',
-				icon : 'fas fa-table',
-				gen  : ClassTableGen.full('classTable,frame,decoration,wide'),
-			},
-			{
-				name : 'Class Table (unframed)',
-				icon : 'fas fa-border-none',
-				gen  : ClassTableGen.full('classTable,wide'),
-			},
-			{
-				name : '1/2 Class Table',
-				icon : 'fas fa-list-alt',
-				gen  : ClassTableGen.half('classTable,decoration,frame'),
-			},
-			{
-				name : '1/2 Class Table (unframed)',
-				icon : 'fas fa-border-none',
-				gen  : ClassTableGen.half('classTable'),
-			},
-			{
-				name : '1/3 Class Table',
-				icon : 'fas fa-border-all',
-				gen  : ClassTableGen.third('classTable,frame'),
-			},
-			{
-				name : '1/3 Class Table (unframed)',
-				icon : 'fas fa-border-none',
-				gen  : ClassTableGen.third('classTable'),
-			}
+			// {
+			// 	name : 'Class Table',
+			// 	icon : 'fas fa-table',
+			// 	gen  : ClassTableGen.full('classTable,frame,decoration,wide'),
+			// },
+			// {
+			// 	name : 'Class Table (unframed)',
+			// 	icon : 'fas fa-border-none',
+			// 	gen  : ClassTableGen.full('classTable,wide'),
+			// },
+			// {
+			// 	name : '1/2 Class Table',
+			// 	icon : 'fas fa-list-alt',
+			// 	gen  : ClassTableGen.half('classTable,decoration,frame'),
+			// },
+			// {
+			// 	name : '1/2 Class Table (unframed)',
+			// 	icon : 'fas fa-border-none',
+			// 	gen  : ClassTableGen.half('classTable'),
+			// },
+			// {
+			// 	name : '1/3 Class Table',
+			// 	icon : 'fas fa-border-all',
+			// 	gen  : ClassTableGen.third('classTable,frame'),
+			// },
+			// {
+			// 	name : '1/3 Class Table (unframed)',
+			// 	icon : 'fas fa-border-none',
+			// 	gen  : ClassTableGen.third('classTable'),
+			// }
 		]
 	},
 
