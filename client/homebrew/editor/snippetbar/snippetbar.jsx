@@ -37,7 +37,13 @@ const Snippetbar = createClass({
 	},
 
 	handleSnippetClick : function(injectedText){
-		this.props.onInject(injectedText);
+		if(typeof injectedText==='string') {
+			this.props.onInject(injectedText);
+		};
+		if(typeof injectedText==='object') {
+			this.props.onInject(injectedText.text[0], 'text', injectedText.text[1]);
+			this.props.onInject(injectedText.style[0], 'style', injectedText.style[1]);
+		};
 	},
 
 	renderSnippetGroups : function(){

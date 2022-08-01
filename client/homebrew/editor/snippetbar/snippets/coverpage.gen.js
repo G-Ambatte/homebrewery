@@ -99,17 +99,19 @@ const subtitles = [
 
 
 module.exports = ()=>{
-	return `<style>
-  .page#p1{ text-align:center; counter-increment: none; }
-  .page#p1:after{ display:none; }
+	return {
+		style : [`
+  .page#p1 { text-align:center; counter-increment: none; }
+  .page#p1:after { display:none; }
   .page:nth-child(2n) .pageNumber { left: inherit !important; right: 2px !important; }
   .page:nth-child(2n+1) .pageNumber { right: inherit !important; left: 2px !important; }
   .page:nth-child(2n)::after { transform: scaleX(1); }
   .page:nth-child(2n+1)::after { transform: scaleX(-1); }
   .page:nth-child(2n) .footnote { left: inherit; text-align: right; }
   .page:nth-child(2n+1) .footnote { left: 80px; text-align: left; }
-</style>
+  `, true],
 
+		text : [`
 {{margin-top:225px}}
 
 # ${_.sample(titles)}
@@ -120,5 +122,6 @@ module.exports = ()=>{
 ##### ${_.sample(subtitles)}
 }}
 
-\\page`;
+\\page
+`, false] };
 };

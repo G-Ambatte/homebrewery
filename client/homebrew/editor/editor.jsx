@@ -79,20 +79,33 @@ const Editor = createClass({
 		}
 	},
 
-	handleInject : function(injectText){
+	handleInject : function(injectText, targetTab=null, appendText=null){
+		// targetTab    : valid options 'text', 'style', null
+		//   Selects the desired tab to inject the text into
+		// appendText   : valid options true, false, null
+		//   Selects the desired injection behaviour
+		//     true     : inject the text at the end of the current text
+		//     false    : inject the text at the start of the current text
+		//     null     : inject the text at the current cursor position (only valid on open tab)
+
 		let text;
-		if(this.isText())  text = this.props.brew.text;
-		if(this.isStyle()) text = this.props.brew.style ?? DEFAULT_STYLE_TEXT;
+		if(targetTab === 'text' || (targetTab === null && this.isText()))  text = this.props.brew.text;
+		if(targetTab === 'style' || (targetTab === null && this.isStyle())) text = this.props.brew.style ?? DEFAULT_STYLE_TEXT;
 
 		const lines = text.split('\n');
-		const cursorPos = this.refs.codeEditor.getCursorPosition();
+		let cursorPos;
+		if(targetTab === null) {
+			cursorPos = this.refs.codeEditor.getCursorPosition();
+		} else {
+			cursorPos = (appendText === true ? { line: lines.length-1 || 0, ch: 0 } : { line: 0, ch: 0 });
+		};
 		lines[cursorPos.line] = splice(lines[cursorPos.line], cursorPos.ch, injectText);
 
 		const injectLines = injectText.split('\n');
 		this.refs.codeEditor.setCursorPosition(cursorPos.line + injectLines.length, cursorPos.ch  + injectLines[injectLines.length - 1].length);
 
-		if(this.isText())  this.props.onTextChange(lines.join('\n'));
-		if(this.isStyle()) this.props.onStyleChange(lines.join('\n'));
+		if(targetTab === 'text' || (targetTab === null && this.isText()))  this.props.onTextChange(lines.join('\n'));
+		if(targetTab === 'style' || (targetTab === null && this.isStyle())) this.props.onStyleChange(lines.join('\n'));
 	},
 
 	handleViewChange : function(newView){
