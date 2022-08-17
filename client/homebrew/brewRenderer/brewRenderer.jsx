@@ -39,7 +39,9 @@ const BrewRenderer = createClass({
 			viewablePageNumber : 0,
 			height             : 0,
 			isMounted          : false,
-			imgCapture         : null,
+
+			imgCapture : null,
+			preview    : false,
 
 			pages          : pages,
 			usePPR         : pages.length >= PPR_THRESHOLD,
@@ -165,6 +167,7 @@ const BrewRenderer = createClass({
 	},
 
 	startCapturePreview : async function() {
+		if(this.state.preview) { return; }
 		// const targetPage = prompt('Enter page number to capture: (e.g. 1) ');
 		// if(!targetPage) return;
 
@@ -173,13 +176,16 @@ const BrewRenderer = createClass({
 		});
 		const track = stream.getVideoTracks()[0];
 
-		// const cropTarget = await self.CropTarget.fromElement(window.frames['BrewRenderer'].contentDocument.getElementById('p1'));
-		// await track.cropTo(cropTarget);
+		const cropTargetBrewRenderer = await self.CropTarget.fromElement(window.frames['BrewRenderer']);
+		await track.cropTo(cropTargetBrewRenderer);
+
+		// const cropTarget = await self.CropTarget.fromElement(window.frames['BrewRenderer'].contentDocument.querySelector('#p1'));
 
 		const imageCapture = new ImageCapture(track);
 
 		this.setState({
-			imgCapture : imageCapture
+			imgCapture : imageCapture,
+			preview    : true
 		});
 
 		const previewElement = window.frames['BrewRenderer'].contentDocument.getElementById('Preview');
@@ -212,9 +218,9 @@ const BrewRenderer = createClass({
 	renderRegionCapture : function(){
 		const cropTargetAvailable = ('CropTarget' in self && 'fromElement' in CropTarget);
 		if(!cropTargetAvailable) return;
-		return <div className='cropTarget'>
+		return <div className='startCropTarget'>
 			<button onClick={this.startCapturePreview}>
-				CLICK ME
+				{!this.state.preview ? 'START' : 'STOP'}
 			</button>
 			<video id='Preview' className='regionCapturePreview' style={{ position: 'fixed', width: '100px', height: '100px', border: '2px solid white' }} onClick={this.captureImage}></video>
 		</div>;
