@@ -1,3 +1,4 @@
+/*eslint max-lines: ["warn", {"max": 300, "skipBlankLines": true, "skipComments": true}]*/
 require('./brewRenderer.less');
 const React = require('react');
 const createClass = require('create-react-class');
@@ -38,6 +39,7 @@ const BrewRenderer = createClass({
 			viewablePageNumber : 0,
 			height             : 0,
 			isMounted          : false,
+			imgCapture         : null,
 
 			pages          : pages,
 			usePPR         : pages.length >= PPR_THRESHOLD,
@@ -162,6 +164,62 @@ const BrewRenderer = createClass({
 		return this.lastRender;
 	},
 
+	startCapturePreview : async function() {
+		// const targetPage = prompt('Enter page number to capture: (e.g. 1) ');
+		// if(!targetPage) return;
+
+		const stream = await navigator.mediaDevices.getDisplayMedia({
+			preferCurrentTab : true
+		});
+		const track = stream.getVideoTracks()[0];
+
+		// const cropTarget = await self.CropTarget.fromElement(window.frames['BrewRenderer'].contentDocument.getElementById('p1'));
+		// await track.cropTo(cropTarget);
+
+		const imageCapture = new ImageCapture(track);
+
+		this.setState({
+			imgCapture : imageCapture
+		});
+
+		const previewElement = window.frames['BrewRenderer'].contentDocument.getElementById('Preview');
+
+		previewElement.srcObject = stream;
+		previewElement.play();
+	},
+
+	captureImage : async function(){
+		const imgCapture = this.state.imgCapture;
+
+		// Grab one frame from the Preview feed
+		const frame = await imgCapture.grabFrame();
+
+		// Convert it from ImageBitmap to Blob
+		const canvas = document.createElement('canvas');
+		canvas.width = frame.width;
+		canvas.height = frame.height;
+		const ctx = canvas.getContext('bitmaprenderer');
+		ctx.transferFromImageBitmap(frame);
+		const imgBlob = await new Promise((res)=>{return canvas.toBlob(res);});
+
+		// Save Blob to local file
+		const fileHandle = await window.showSaveFilePicker();
+		const writeStream = await fileHandle.createWritable();
+		await writeStream.write(imgBlob);
+		await writeStream.close();
+	},
+
+	renderRegionCapture : function(){
+		const cropTargetAvailable = ('CropTarget' in self && 'fromElement' in CropTarget);
+		if(!cropTargetAvailable) return;
+		return <div className='cropTarget'>
+			<button onClick={this.startCapturePreview}>
+				CLICK ME
+			</button>
+			<video id='Preview' className='regionCapturePreview' style={{ position: 'fixed', width: '100px', height: '100px', border: '2px solid white' }} onClick={this.captureImage}></video>
+		</div>;
+	},
+
 	frameDidMount : function(){	//This triggers when iFrame finishes internal "componentDidMount"
 		setTimeout(()=>{	//We still see a flicker where the style isn't applied yet, so wait 100ms before showing iFrame
 			this.updateSize();
@@ -209,10 +267,12 @@ const BrewRenderer = createClass({
 								<div className='pages' ref='pages'>
 									{this.renderPages()}
 								</div>
+								{this.renderRegionCapture()}
 							</>
 						}
 					</div>
 				</Frame>
+
 				{this.renderPageInfo()}
 				{this.renderPPRmsg()}
 			</React.Fragment>
