@@ -172,7 +172,10 @@ const BrewRenderer = createClass({
 		// if(!targetPage) return;
 
 		const stream = await navigator.mediaDevices.getDisplayMedia({
-			preferCurrentTab : true
+			preferCurrentTab : true,
+			video            : {
+				cursor : 'never'
+			}
 		});
 		const track = stream.getVideoTracks()[0];
 
@@ -188,7 +191,7 @@ const BrewRenderer = createClass({
 			preview    : true
 		});
 
-		const previewElement = window.frames['BrewRenderer'].contentDocument.getElementById('Preview');
+		const previewElement = document.getElementById('Preview');
 
 		previewElement.srcObject = stream;
 		previewElement.play();
@@ -218,7 +221,7 @@ const BrewRenderer = createClass({
 	renderRegionCapture : function(){
 		const cropTargetAvailable = ('CropTarget' in self && 'fromElement' in CropTarget);
 		if(!cropTargetAvailable) return;
-		return <div className='startCropTarget'>
+		return <div className='startCropTarget' style={{ position: 'fixed', top: '0px' }}>
 			<button onClick={this.startCapturePreview}>
 				{!this.state.preview ? 'START' : 'STOP'}
 			</button>
@@ -267,18 +270,18 @@ const BrewRenderer = createClass({
 						<link href={`${this.props.renderer == 'legacy' ? '/themes/5ePhbLegacy.style.css' : '/themes/5ePhb.style.css'}`} rel='stylesheet'/>
 						{/* Apply CSS from Style tab and render pages from Markdown tab */}
 						{this.state.isMounted
-							&&
-							<>
-								{this.renderStyle()}
-								<div className='pages' ref='pages'>
-									{this.renderPages()}
-								</div>
-								{this.renderRegionCapture()}
-							</>
+								&&
+								<>
+									{this.renderStyle()}
+									<div className='pages' ref='pages'>
+										{this.renderPages()}
+									</div>
+								</>
 						}
 					</div>
 				</Frame>
 
+				{this.state.isMounted ? this.renderRegionCapture() : null}
 				{this.renderPageInfo()}
 				{this.renderPPRmsg()}
 			</React.Fragment>
