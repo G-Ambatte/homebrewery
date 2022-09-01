@@ -21,6 +21,8 @@ const BREWKEY = 'homebrewery-new';
 const STYLEKEY = 'homebrewery-new-style';
 const METAKEY = 'homebrewery-new-meta';
 
+const DEFAULT_RENDERER = 'V3';
+
 
 const NewPage = createClass({
 	displayName     : 'NewPage',
@@ -59,7 +61,7 @@ const NewPage = createClass({
 				published   : false,
 				authors     : [],
 				systems     : brew.systems || [],
-				renderer    : brew.renderer || 'V3'
+				renderer    : brew.renderer || undefined
 			},
 
 			isSaving   : false,
@@ -84,7 +86,9 @@ const NewPage = createClass({
 				brew.style = brew.style || (styleStorage ?? undefined);
 				// brew.title = metaStorage?.title || this.state.brew.title;
 				// brew.description = metaStorage?.description || this.state.brew.description;
-				brew.renderer = brew.renderer || metaStorage?.renderer;
+				if(!brew.renderer) {
+					brew.renderer = metaStorage?.renderer || DEFAULT_RENDERER;
+				}
 
 				this.setState({
 					brew : brew
@@ -94,7 +98,7 @@ const NewPage = createClass({
 
 		localStorage.setItem(BREWKEY, brew.text);
 		localStorage.setItem(STYLEKEY, brew.style);
-		localStorage.setItem(METAKEY, JSON.stringify({'renderer' : brew.renderer}));
+		localStorage.setItem(METAKEY, JSON.stringify({ renderer: brew.renderer }));
 	},
 	componentWillUnmount : function() {
 		document.removeEventListener('keydown', this.handleControlKeys);
