@@ -48,21 +48,34 @@ const NewPage = createClass({
 	},
 
 	getInitialState : function() {
-		const brew = this.props.brew;
+		// CREATE BLANK BREW
+		let brew = {
+			text        : '',
+			style       : undefined,
+			gDrive      : false,
+			title       : '',
+			description : '',
+			tags        : [],
+			published   : false,
+			authors     : [],
+			systems     : [],
+			renderer    : undefined
+		};
+
+		if(this.props.brew){
+			// BREW IS CLONE
+			// Get data from original brew
+			brew = _.merge(brew, this.props.brew);
+			console.log(this.props.brew);
+			// Remove data that does not apply to clone
+			brew.editId = null;
+			brew.shareId = null;
+			brew.authors = [];
+			brew.views = 0;
+		};
 
 		return {
-			brew : {
-				text        : brew.text || '',
-				style       : brew.style || undefined,
-				gDrive      : false,
-				title       : brew.title || '',
-				description : brew.description || '',
-				tags        : brew.tags || '',
-				published   : false,
-				authors     : [],
-				systems     : brew.systems || [],
-				renderer    : brew.renderer || undefined
-			},
+			brew : brew,
 
 			isSaving   : false,
 			saveGoogle : (global.account && global.account.googleId ? true : false),
@@ -76,7 +89,7 @@ const NewPage = createClass({
 
 		const brew = this.state.brew;
 
-		if(typeof window !== 'undefined') { //Load from localStorage if in client browser
+		if(typeof window !== 'undefined' && this.props.brew) { //Load from localStorage if in client browser
 			const brewStorage  = localStorage.getItem(BREWKEY);
 			const styleStorage = localStorage.getItem(STYLEKEY);
 			const metaStorage = JSON.parse(localStorage.getItem(METAKEY));
