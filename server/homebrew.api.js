@@ -236,8 +236,11 @@ const updateBrew = async (req, res)=>{
 		brew = new HomebrewModel(brew);
 	}
 
+	brew.tags = [].concat(brew.tags).filter((tag)=>{return tag != '';});
+
 	brew.markModified('authors');
 	brew.markModified('systems');
+	brew.markModified('tags');
 
 	// Save the database brew
 	const saved = await brew.save()
