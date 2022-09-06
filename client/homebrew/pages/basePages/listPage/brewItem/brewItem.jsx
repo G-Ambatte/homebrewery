@@ -97,6 +97,8 @@ const BrewItem = createClass({
 		const brew = this.props.brew;
 		const dateFormatString = 'YYYY-MM-DD HH:mm:ss';
 
+		console.log(brew.tags);
+
 		return <div className='brewItem'>
 			<div className='text'>
 				<h2>{brew.title}</h2>
@@ -104,7 +106,7 @@ const BrewItem = createClass({
 			</div>
 			<hr />
 			<div className='info'>
-				{brew.tags ? <>
+				{brew.tags?.length > 0 ? <>
 					<span className='brewTags' title={`Tags:\n${brew.tags.join('\n')}`}>
 						<i className='fas fa-tags'/> {brew.tags.join(', ')}
 					</span>
