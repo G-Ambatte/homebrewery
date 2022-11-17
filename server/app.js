@@ -1,4 +1,4 @@
-/*eslint max-lines: ["warn", {"max": 400, "skipBlankLines": true, "skipComments": true}]*/
+/*eslint max-lines: ["warn", {"max": 600, "skipBlankLines": true, "skipComments": true}]*/
 // Set working directory to project root
 process.chdir(`${__dirname}/..`);
 
@@ -14,6 +14,8 @@ const GoogleActions = require('./googleActions.js');
 const serveCompressedStaticAssets = require('./static-assets.mv.js');
 const sanitizeFilename = require('sanitize-filename');
 const asyncHandler = require('express-async-handler');
+
+const { createCanvas } = require('canvas');
 
 const splitTextStyleAndMetadata = (brew)=>{
 	brew.text = brew.text.replaceAll('\r\n', '\n');
@@ -379,6 +381,57 @@ app.get('/account', asyncHandler(async (req, res, next)=>{
 
 	req.brew = data;
 	return next();
+}));
+
+// Stupid thumbnail idea
+app.get('/thumb/:id', asyncHandler(getBrew('share')), asyncHandler(async (req, res, next)=>{
+	req.ogMeta = {};
+
+	const data = {
+		title : req.brew.title || 'Abcde FGHIJ klmno Pqrst UVXWY'
+	};
+
+	const maxTitleLineLength = 16;
+	let firstTitleLine = '';
+	let secondTitleLine = '';
+
+	if(data.title.length > maxTitleLineLength) {
+		const fullTitle = data.title;
+		const words = data.title.split(' ');
+
+		for (word of words){
+			if(firstTitleLine.length + word.length > maxTitleLineLength) break;
+			firstTitleLine = firstTitleLine.length == 0 ? word : [firstTitleLine, word].join(' ');
+		}
+		if(fullTitle != firstTitleLine) {
+			secondTitleLine = fullTitle.slice(firstTitleLine.length+1);
+			if(secondTitleLine.length > maxTitleLineLength) {
+				secondTitleLine = [secondTitleLine.slice(0, maxTitleLineLength - 4), '...'].join('');
+			}
+		};
+		console.log(`FIRST : --${firstTitleLine}--`);
+		console.log(`SECOND: --${secondTitleLine}--`);
+	}
+
+	const width = 300;
+	const height = 100;
+
+	const canvas = createCanvas(width, height);
+	const context = canvas.getContext('2d');
+	context.fillStyle = '#2C3E50';
+	context.fillRect(0, 0, width, height);
+
+	context.font = 'bold 18pt "Sans"';
+	context.textAlign = 'left';
+	context.fillStyle = '#fff';
+	context.fillText(firstTitleLine, 20, height*1.75/5);
+	if(secondTitleLine) {
+		context.fillText(secondTitleLine, 20, height*3/5);
+	}
+
+	const buffer = canvas.toBuffer('image/png');
+
+	return res.status(200).send(buffer);
 }));
 
 
