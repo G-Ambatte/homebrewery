@@ -88,9 +88,9 @@ const BrewItem = createClass({
 	renderGoogleDriveIcon : function(){
 		if(!this.props.brew.googleId) return;
 
-		return <span>
+		return <a href={`/revisions/${this.props.brew.googleId}`}>
 			<img className='googleDriveIcon' src={googleDriveIcon} alt='googleDriveIcon' />
-		</span>;
+		</a>;
 	},
 
 	render : function(){

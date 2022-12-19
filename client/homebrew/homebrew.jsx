@@ -12,6 +12,7 @@ const NewPage = require('./pages/newPage/newPage.jsx');
 //const ErrorPage = require('./pages/errorPage/errorPage.jsx');
 const PrintPage = require('./pages/printPage/printPage.jsx');
 const AccountPage = require('./pages/accountPage/accountPage.jsx');
+const RevisionPage = require('./pages/userPage/userPage.jsx');
 
 const WithRoute = (props)=>{
 	const params = useParams();
@@ -71,6 +72,7 @@ const Homebrew = createClass({
 						<Route path='/new/:id' element={<WithRoute el={NewPage} brew={this.props.brew} />} />
 						<Route path='/new' element={<WithRoute el={NewPage}/>} />
 						<Route path='/user/:username' element={<WithRoute el={UserPage} brews={this.props.brews} />} />
+						<Route path='/revisions/:id' element={<WithRoute el={RevisionPage} brew={this.props.brew} />} />
 						<Route path='/print/:id' element={<WithRoute el={PrintPage} brew={this.props.brew} />} />
 						<Route path='/print' element={<WithRoute el={PrintPage} />} />
 						<Route path='/changelog' element={<WithRoute el={SharePage} brew={this.props.brew} />} />

@@ -272,6 +272,20 @@ app.get('/user/:username', async (req, res, next)=>{
 	return next();
 });
 
+// Google File Revisions Page
+app.get('/revisions/:id', async (req, res, next)=>{
+	if(!req.account.googleId){ return 'Not logged in'; }
+	const brewRevisions = await GoogleActions.getGoogleRevisionList(req.params.id, 'revisions(modifiedTime,originalFilename)')
+		.catch((err)=>{
+			console.error(err);
+		});
+	if(!brewRevisions){ return 'No revisions for file'; }
+	const mappedRevisions = _.map(brewRevisions, (revision)=>{ return { modifiedTime: revision.modifiedTime, title: revision.originalFilename.slice(0, -4) }; });
+	console.log(mappedRevisions);
+	req.brews = mappedRevisions;
+	return next();
+});
+
 //Edit Page
 app.get('/edit/:id', asyncHandler(getBrew('edit')), (req, res, next)=>{
 	req.brew = req.brew.toObject ? req.brew.toObject() : req.brew;

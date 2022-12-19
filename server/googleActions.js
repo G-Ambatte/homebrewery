@@ -217,6 +217,17 @@ const GoogleActions = {
 		return obj.data.id;
 	},
 
+	getGoogleRevisionList : async (id, fields)=>{
+		const drive = google.drive({ version: 'v3' });
+
+		const obj = await drive.revisions.list({
+			fileId : id,
+			fields : fields
+		});
+
+		return obj.data.revisions;
+	},
+
 	getGoogleBrew : async (id, accessId, accessType)=>{
 		const drive = google.drive({ version: 'v3' });
 
