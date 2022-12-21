@@ -7,7 +7,7 @@ const moment      = require('moment');
 
 const BrewItem    = require('./brewItem/brewItem.jsx');
 
-const USERPAGE_KEY_PREFIX = 'HOMEBREWERY-LISTPAGE';
+// const USERPAGE_KEY_PREFIX = 'HOMEBREWERY-LISTPAGE';
 
 const DEFAULT_SORT_TYPE = 'alpha';
 const DEFAULT_SORT_DIR = 'asc';
@@ -23,6 +23,7 @@ const ListPage = createClass({
 					brews : []
 				}
 			],
+			sort     : true,
 			navItems : <></>
 		};
 	},
@@ -34,11 +35,12 @@ const ListPage = createClass({
 		});
 
 		return {
-			filterString   : this.props.query?.filter || '',
-			sortType       : this.props.query?.sort || null,
-			sortDir        : this.props.query?.dir || null,
-			query          : this.props.query,
-			brewCollection : brewCollection
+			USERPAGE_KEY_PREFIX : this.props.USERPAGE_KEY_PREFIX,
+			filterString        : this.props.query?.filter || '',
+			sortType            : this.props.query?.sort || null,
+			sortDir             : this.props.query?.dir || null,
+			query               : this.props.query,
+			brewCollection      : brewCollection
 		};
 	},
 
@@ -48,12 +50,12 @@ const ListPage = createClass({
 
 		// LOAD FROM LOCAL STORAGE
 		if(typeof window !== 'undefined') {
-			const newSortType = (this.state.sortType ?? (localStorage.getItem(`${USERPAGE_KEY_PREFIX}-SORTTYPE`) || DEFAULT_SORT_TYPE));
-			const newSortDir = (this.state.sortDir ?? (localStorage.getItem(`${USERPAGE_KEY_PREFIX}-SORTDIR`) || DEFAULT_SORT_DIR));
+			const newSortType = (this.state.sortType ?? (localStorage.getItem(`${this.props.USERPAGE_KEY_PREFIX}-SORTTYPE`) || DEFAULT_SORT_TYPE));
+			const newSortDir = (this.state.sortDir ?? (localStorage.getItem(`${this.props.USERPAGE_KEY_PREFIX}-SORTDIR`) || DEFAULT_SORT_DIR));
 			this.updateUrl(this.state.filterString, newSortType, newSortDir);
 
 			const brewCollection = this.props.brewCollection.map((brewGroup)=>{
-				brewGroup.visible = (localStorage.getItem(`${USERPAGE_KEY_PREFIX}-VISIBILITY-${brewGroup.class}`) ?? 'true')=='true';
+				brewGroup.visible = (localStorage.getItem(`${this.props.USERPAGE_KEY_PREFIX}-VISIBILITY-${brewGroup.class}`) ?? 'true')=='true';
 				return brewGroup;
 			});
 
@@ -71,10 +73,10 @@ const ListPage = createClass({
 
 	saveToLocalStorage : function() {
 		this.state.brewCollection.map((brewGroup)=>{
-			localStorage.setItem(`${USERPAGE_KEY_PREFIX}-VISIBILITY-${brewGroup.class}`, `${brewGroup.visible}`);
+			localStorage.setItem(`${this.props.USERPAGE_KEY_PREFIX}-VISIBILITY-${brewGroup.class}`, `${brewGroup.visible}`);
 		});
-		localStorage.setItem(`${USERPAGE_KEY_PREFIX}-SORTTYPE`, this.state.sortType);
-		localStorage.setItem(`${USERPAGE_KEY_PREFIX}-SORTDIR`, this.state.sortDir);
+		localStorage.setItem(`${this.props.USERPAGE_KEY_PREFIX}-SORTTYPE`, this.state.sortType);
+		localStorage.setItem(`${this.props.USERPAGE_KEY_PREFIX}-SORTDIR`, this.state.sortDir);
 	},
 
 	renderBrews : function(brews){
@@ -166,6 +168,7 @@ const ListPage = createClass({
 	},
 
 	renderSortOptions : function(){
+		if(!this.props.sort) return;
 		return <div className='sort-container'>
 			<h6>Sort by :</h6>
 			{this.renderSortOption('Title', 'alpha')}

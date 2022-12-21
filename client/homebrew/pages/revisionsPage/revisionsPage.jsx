@@ -13,8 +13,8 @@ const Account = require('../../navbar/account.navitem.jsx');
 const NewBrew = require('../../navbar/newbrew.navitem.jsx');
 const HelpNavItem = require('../../navbar/help.navitem.jsx');
 
-const UserPage = createClass({
-	displayName     : 'UserPage',
+const RevisionsPage = createClass({
+	displayName     : 'RevisionsPage',
 	getDefaultProps : function() {
 		return {
 			username : '',
@@ -23,28 +23,17 @@ const UserPage = createClass({
 		};
 	},
 	getInitialState : function() {
-		const usernameWithS = this.props.username + (this.props.username.endsWith('s') ? `’` : `’s`);
-
-		const brews = _.groupBy(this.props.brews, (brew)=>{
-			return (brew.published ? 'published' : 'private');
-		});
+		const brews = _.orderBy(this.props.brews, (brew)=>{
+			return brew.modifiedTime;
+		}, 'desc');
 
 		const brewCollection = [
 			{
-				title : `${usernameWithS} published brews`,
-				class : 'published',
-				brews : brews.published
+				title : `Revisions`,
+				class : 'revisions',
+				brews : brews
 			}
 		];
-		if(this.props.username == global.account?.username){
-			brewCollection.push(
-				{
-					title : `${usernameWithS} unpublished brews`,
-					class : 'unpublished',
-					brews : brews.private
-				}
-			);
-		}
 
 		return {
 			brewCollection : brewCollection
@@ -68,9 +57,9 @@ const UserPage = createClass({
 			navItems={this.navItems()}
 			query={this.props.query}
 			sort={true}
-			USERPAGE_KEY_PREFIX='HOMEBREWERY-LISTPAGE'
+			USERPAGE_KEY_PREFIX='HOMEBREWERY-REVISIONSPAGE'
 		></ListPage>;
 	}
 });
 
-module.exports = UserPage;
+module.exports = RevisionsPage;
