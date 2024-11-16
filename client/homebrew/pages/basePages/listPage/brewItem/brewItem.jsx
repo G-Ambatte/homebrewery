@@ -20,7 +20,14 @@ const BrewItem = createClass({
 			},
 			updateListFilter : ()=>{},
 			reportError      : ()=>{},
-			renderStorage    : true
+			renderStorage    : true,
+			updateSelection  : ()=>{}
+		};
+	},
+
+	getInitialState : function(){
+		return {
+			selected : false
 		};
 	},
 
@@ -46,6 +53,16 @@ const BrewItem = createClass({
 
 	updateFilter : function(type, term){
 		this.props.updateListFilter(type, term);
+	},
+
+	toggleSelection : function(){
+		this.props.updateSelection(this.props.brew.shareId);
+		this.setState((prevState)=>{
+			return {
+				...prevState,
+				selected : !prevState.selected
+			};
+		});
 	},
 
 	renderDeleteBrewLink : function(){
@@ -126,6 +143,7 @@ const BrewItem = createClass({
 				</div>
 			}
 			<div className='text'>
+				<input type='checkbox' checked={this.state.selected} onChange={this.toggleSelection}/>
 				<h2>{brew.title}</h2>
 				<p className='description'>{brew.description}</p>
 			</div>

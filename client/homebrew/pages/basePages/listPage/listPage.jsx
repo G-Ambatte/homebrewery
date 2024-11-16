@@ -40,7 +40,8 @@ const ListPage = createClass({
 			sortType       : this.props.query?.sort || null,
 			sortDir        : this.props.query?.dir || null,
 			query          : this.props.query,
-			brewCollection : brewCollection
+			brewCollection : brewCollection,
+			selectedBrews  : []
 		};
 	},
 
@@ -79,11 +80,35 @@ const ListPage = createClass({
 		localStorage.setItem(`${USERPAGE_KEY_PREFIX}-SORTDIR`, this.state.sortDir);
 	},
 
+	updateSelection : function (shareId){
+		if(this.state.selectedBrews.includes(shareId)){
+			this.setState((prevState)=>{
+				return {
+					...prevState,
+					selectedBrews : prevState.selectedBrews.filter((id)=>{return id != shareId;})
+				};
+			});
+			return;
+		}
+		this.setState((prevState)=>{
+			return {
+				...prevState,
+				selectedBrews : prevState.selectedBrews.concat([shareId])
+			};
+		});
+	},
+
 	renderBrews : function(brews){
 		if(!brews || !brews.length) return <div className='noBrews'>No Brews.</div>;
 
 		return _.map(brews, (brew, idx)=>{
-			return <BrewItem brew={brew} key={idx} reportError={this.props.reportError} updateListFilter={ (tag)=>{ this.updateUrl(this.state.filterString, this.state.sortType, this.state.sortDir, tag); }}/>;
+			return <BrewItem
+				brew={brew}
+				key={idx}
+				reportError={this.props.reportError}
+				updateListFilter={ (tag)=>{ this.updateUrl(this.state.filterString, this.state.sortType, this.state.sortDir, tag); }}
+				updateSelection={this.updateSelection}
+			/>;
 		});
 	},
 
