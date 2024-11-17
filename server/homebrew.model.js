@@ -60,6 +60,12 @@ HomebrewSchema.statics.getByUser = async function(username, allowAccess=false, f
 	return brews;
 };
 
+HomebrewSchema.statics.updateManyTags = async function(username, tag, idList){
+	const query = { shareId: { $in: idList }, authors: username };
+	const update = { $addToSet: tag };
+	return await Homebrew.updateMany(query, update);
+};
+
 const Homebrew = mongoose.model('Homebrew', HomebrewSchema);
 
 module.exports = {
