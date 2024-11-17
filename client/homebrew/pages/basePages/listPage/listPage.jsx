@@ -235,6 +235,11 @@ const ListPage = createClass({
 		</div>;
 	},
 
+	renderMultiSelectFunctions : function(){
+		if(this.state.selectedBrews.length == 0) return;
+		return <div className='multifunc-container'></div>;
+	},
+
 	getSortedBrews : function(brews){
 		const testString = _.deburr(this.state.filterString).toLowerCase();
 
@@ -291,6 +296,7 @@ const ListPage = createClass({
 			<link href='/themes/V3/5ePHB/style.css' type='text/css' rel='stylesheet'/>
 			{this.props.navItems}
 			{this.renderSortOptions()}
+			{this.renderMultiSelectFunctions()}
 			{this.renderTagsOptions()}
 
 			<div className='content V3'>
