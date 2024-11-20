@@ -240,17 +240,19 @@ const ListPage = createClass({
 	renderMultiSelectFunctions : function(){
 		if(this.state.selectedBrews.length == 0) return;
 		return <div className='multifunc-container'>
-			<input
-				type='search'
-				value={this.state.addTag}
-				onChange={(e)=>{
-					this.setState({
-						addTag : e.target.value
-					});
-				}}
-				onKeyDown={async (e)=>{
-					if(e.key == 'Enter'){
-						await request.post('/api/meta/update/tags')
+			<label>
+				ADD TAG
+				<input
+					type='search'
+					value={this.state.addTag}
+					onChange={(e)=>{
+						this.setState({
+							addTag : e.target.value
+						});
+					}}
+					onKeyDown={async (e)=>{
+						if(e.key == 'Enter'){
+							await request.post('/api/meta/update/tags')
 							.send({
 								tag    : this.state.addTag,
 								idList : this.state.selectedBrews
@@ -258,9 +260,10 @@ const ListPage = createClass({
 							.then(()=>{
 								window.location.reload();
 							});
-					};
-				}}
-			/>
+						};
+					}}
+				/>
+			</label>
 		</div>;
 	},
 
