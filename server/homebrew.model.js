@@ -60,7 +60,7 @@ HomebrewSchema.statics.getByUser = async function(username, allowAccess=false, f
 	return brews;
 };
 
-HomebrewSchema.statics.updateMany = async function(query, update){
+HomebrewSchema.statics.updateManyBrews = async function(query, update){
 	return await Homebrew.updateMany(query, update);
 };
 
