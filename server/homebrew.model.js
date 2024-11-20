@@ -60,9 +60,9 @@ HomebrewSchema.statics.getByUser = async function(username, allowAccess=false, f
 	return brews;
 };
 
-HomebrewSchema.statics.updateManyTags = async function(username, tag, idList){
+HomebrewSchema.statics.addTagsToMany = async function(username, tag, idList){
 	const query = { shareId: { $in: idList }, authors: username };
-	const update = { $addToSet: tag };
+	const update = { $addToSet: { tags: tag } };
 	return await Homebrew.updateMany(query, update);
 };
 

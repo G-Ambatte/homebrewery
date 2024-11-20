@@ -470,6 +470,16 @@ const api = {
 		}
 
 		res.status(204).send();
+	},
+	updateTags : async (req, res)=>{
+		const username = req.account?.username || undefined;
+		const tag = req.body?.tag || undefined;
+		const idList = req.body?.idList || [];
+
+		if(!username || !tag || idList.length == 0){ return res.status(500).send(`Missing parameters => USER: ${username} - TAG: ${tag} - IDs: ${idList}`);}
+		await HomebrewModel.addTagsToMany(username, tag, idList);
+		return res.status(200).send();
+		// await HomebrewModel.updateTags(req.account.username, req.params.tag);
 	}
 };
 
@@ -477,6 +487,7 @@ router.use('/api', require('./middleware/check-client-version.js'));
 router.post('/api', asyncHandler(api.newBrew));
 router.put('/api/:id', asyncHandler(api.getBrew('edit', true)), asyncHandler(api.updateBrew));
 router.put('/api/update/:id', asyncHandler(api.getBrew('edit', true)), asyncHandler(api.updateBrew));
+router.post('/api/meta/update/tags', asyncHandler(api.updateTags));
 router.delete('/api/:id', asyncHandler(api.deleteBrew));
 router.get('/api/remove/:id', asyncHandler(api.deleteBrew));
 router.get('/api/theme/:renderer/:id', asyncHandler(api.getThemeBundle));

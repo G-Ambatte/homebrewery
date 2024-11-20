@@ -4,6 +4,7 @@ const React       = require('react');
 const createClass = require('create-react-class');
 const _           = require('lodash');
 const moment      = require('moment');
+const request     = require('../../../utils/request-middleware.js');
 
 const BrewItem    = require('./brewItem/brewItem.jsx');
 
@@ -41,7 +42,8 @@ const ListPage = createClass({
 			sortDir        : this.props.query?.dir || null,
 			query          : this.props.query,
 			brewCollection : brewCollection,
-			selectedBrews  : []
+			selectedBrews  : [],
+			addTag         : ''
 		};
 	},
 
@@ -237,7 +239,29 @@ const ListPage = createClass({
 
 	renderMultiSelectFunctions : function(){
 		if(this.state.selectedBrews.length == 0) return;
-		return <div className='multifunc-container'></div>;
+		return <div className='multifunc-container'>
+			<input
+				type='search'
+				value={this.state.addTag}
+				onChange={(e)=>{
+					this.setState({
+						addTag : e.target.value
+					});
+				}}
+				onKeyDown={async (e)=>{
+					if(e.key == 'Enter'){
+						await request.post('/api/meta/update/tags')
+							.send({
+								tag    : this.state.addTag,
+								idList : this.state.selectedBrews
+							})
+							.then(()=>{
+								window.location.reload();
+							});
+					};
+				}}
+			/>
+		</div>;
 	},
 
 	getSortedBrews : function(brews){
