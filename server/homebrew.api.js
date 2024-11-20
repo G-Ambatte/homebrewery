@@ -477,9 +477,12 @@ const api = {
 		const idList = req.body?.idList || [];
 
 		if(!username || !tag || idList.length == 0){ return res.status(500).send(`Missing parameters => USER: ${username} - TAG: ${tag} - IDs: ${idList}`);}
-		await HomebrewModel.addTagsToMany(username, tag, idList);
+
+		const query = { shareId: { $in: idList }, authors: username };
+		const update = { $addToSet: { tags: tag } };
+		await HomebrewModel.updateMany(query, update);
+
 		return res.status(200).send();
-		// await HomebrewModel.updateTags(req.account.username, req.params.tag);
 	}
 };
 
