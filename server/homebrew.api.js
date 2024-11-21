@@ -480,9 +480,14 @@ const api = {
 
 		const query = { shareId: { $in: idList }, authors: username };
 		const update = { $addToSet: { tags: tag } };
-		await HomebrewModel.updateManyBrews(query, update);
+		const tagUpdate = await HomebrewModel.updateMany(query, update)
+			.then((result)=>{ return result; })
+			.catch((e)=>{ throw e; });
 
-		return res.status(200).send();
+
+		// console.log(tagUpdate);
+
+		return res.status(200).send(tagUpdate);
 	}
 };
 
