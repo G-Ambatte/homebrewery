@@ -4,7 +4,7 @@ const React       = require('react');
 const createClass = require('create-react-class');
 const _           = require('lodash');
 const moment      = require('moment');
-const request     = require('../../../utils/request-middleware.js');
+import request from '../../../utils/request-middleware.js';
 
 const BrewItem    = require('./brewItem/brewItem.jsx');
 
