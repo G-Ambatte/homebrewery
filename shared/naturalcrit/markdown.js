@@ -14,6 +14,7 @@ import diceFont      from '../../themes/fonts/iconFonts/diceFont.js';
 import elderberryInn from '../../themes/fonts/iconFonts/elderberryInn.js';
 import gameIcons     from '../../themes/fonts/iconFonts/gameIcons.js';
 import fontAwesome   from '../../themes/fonts/iconFonts/fontAwesome.js';
+import markedMermaid from './marked-mermaid.js';
 
 const renderer  = new Marked.Renderer();
 const tokenizer = new Marked.Tokenizer();
@@ -780,6 +781,51 @@ Marked.use({ extensions : [justifiedParagraphs, definitionListsMultiLine, defini
 	nonbreakingSpaces, mustacheSpans, mustacheDivs, mustacheInjectInline] });
 Marked.use(mustacheInjectBlock);
 Marked.use(MarkedSubSuperText());
+Marked.use(markedMermaid({
+	mermaid : {
+		theme          : 'base',
+		themeVariables : {
+			fontFamily         : 'BookInsanityRemake',
+			fontSize           : '12px',
+			background         : '#EEE5CE',
+			mainBkg            : '#faf7ea',
+			primaryColor       : '#faf7ea',
+			primaryTextColor   : '#000',
+			primaryBorderColor : '#c9ad6a',
+			lineColor          : '#c9ad6a',
+			secondaryColor     : '#E0E5C1',
+			noteBkgColor       : '#E0E5C1'
+		},
+		themeCSS : `
+				.node .nodeLabel p { inline-size: 320px; white-space: pre-wrap;  }
+				.node * { stroke-width: 2px !important; }
+			`,
+		flowchart : {
+			useMaxWidth    : true,
+			htmlLabels     : true,
+			curve          : 'linear',
+			diagramPadding : 2,
+			nodeSpacing    : 40,
+			rankSpacing    : 40,
+			padding        : 25,
+		},
+		gantt : {
+			useMaxWidth : true,
+		},
+		sequence : {
+			useMaxWidth : true,
+		},
+		pie : {
+			useMaxWidth : true,
+		},
+		requirement : {
+			useMaxWidth : true,
+		},
+		c4 : {
+			useMaxWidth : true,
+		}
+	}
+}));
 Marked.use({ renderer: renderer, tokenizer: tokenizer, mangle: false });
 Marked.use(MarkedExtendedTables({ interruptPatterns: tableTerminators }), MarkedGFMHeadingId({ globalSlugs: true }),
 	MarkedSmartypantsLite(), MarkedEmojis(MarkedEmojiOptions));
