@@ -209,9 +209,13 @@ const BrewRenderer = (props)=>{
 			}
 
 			// DO NOT REMOVE!!! REQUIRED FOR BACKWARDS COMPATIBILITY WITH NON-UPGRADABLE VERSIONS OF CHROME.
-			pageText += `\n\n&nbsp;\n\\column\n&nbsp;`; //Artificial column break at page end to emulate column-fill:auto (until `wide` is used, when column-fill:balance will reappear)
+			pageText += `\n&nbsp;\n\\column\n&nbsp;`; //Artificial column break at page end to emulate column-fill:auto (until `wide` is used, when column-fill:balance will reappear)
 
 			const html = Markdown.render(pageText, index);
+
+			Markdown.tokens[index].lines = Math.max(Markdown.tokens[index].lines - 4, 0);
+
+			console.log(Markdown.tokens);
 
 			return <BrewPage className={classes} index={index} key={index} contents={html} style={styles} attributes={attributes} onVisibilityChange={handlePageVisibilityChange} />;
 		}

@@ -1,4 +1,4 @@
-/* eslint-disable max-depth */
+
 /* eslint-disable max-lines */
 import _                        from 'lodash';
 import { marked as Marked }     from 'marked';
@@ -8,9 +8,9 @@ import MarkedAlignedParagraphs  from 'marked-alignment-paragraphs';
 import MarkedNonbreakingSpaces  from 'marked-nonbreaking-spaces';
 import MarkedSubSuperText       from 'marked-subsuper-text';
 import { markedVariables,
-				setMarkedVariablePage,
-				setMarkedVariable,
-				getMarkedVariable }  from 'marked-variables';
+	setMarkedVariablePage,
+	setMarkedVariable,
+	getMarkedVariable }  from 'marked-variables';
 import { markedSmartypantsLite as MarkedSmartypantsLite }                                from 'marked-smartypants-lite';
 import { gfmHeadingId as MarkedGFMHeadingId, resetHeadings as MarkedGFMResetHeadingIDs } from 'marked-gfm-heading-id';
 import { markedEmoji as MarkedEmojis }                                                   from 'marked-emoji';
@@ -480,6 +480,8 @@ const mergeHTMLTags = (originalTags, newTags)=>{
 	};
 };
 
+const rendererTokens = [];
+
 const Markdown = {
 	marked : Marked,
 	render : (rawBrewText, pageNumber=0)=>{
@@ -492,6 +494,8 @@ const Markdown = {
 
 		if(pageNumber==0) MarkedGFMResetHeadingIDs();
 
+		const lines = (rawBrewText || '').split('\n').length;
+
 		rawBrewText = rawBrewText.replace(/^\\column(?:break)?$/gm, `\n<div class='columnSplit'></div>\n`);
 
 		const opts = Marked.defaults;
@@ -501,9 +505,31 @@ const Markdown = {
 
 		Marked.walkTokens(tokens, opts.walkTokens);
 
+		tokens.lines = lines;
+
+		tokens.map((token, index)=>{
+			let lines = (token.raw || '').split('\n').length;
+			// Column split can occupies only one line in the Editor but generate 6 line returns
+			if(token.type == 'space') { lines -= 2; }
+			if(token.type == 'html' && token.raw.startsWith('<div class=\'columnSplit\'></div>')) {
+				lines -= 2;
+				// Column split automatically generates a preceding space, which may be combined with other spaces in the previous token
+				tokens[index - 1].lines = Math.max(tokens[index - 1].lines - 1, 0);
+			}
+			// Due to the final automatic column break, the last final five tokens have reduced/no editor presence
+			if(index >= tokens.length - 4){ lines = 0; }
+			if(index == tokens.length - 5){ lines -= 1; }
+
+			tokens[index].lines = lines;
+		});
+
+		rendererTokens[pageNumber] = tokens;
+
 		const html = Marked.parser(tokens, opts);
 		return opts.hooks.postprocess(html);
 	},
+
+	tokens : rendererTokens,
 
 	validate : (rawBrewText)=>{
 		const errors = [];
