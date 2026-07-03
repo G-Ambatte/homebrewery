@@ -8,27 +8,20 @@ let polyfillPromise;
 // look for `anchorName` in the computed styles
 const supportsAnchorPositioning = ()=>'anchorName' in document.documentElement.style;
 
-// wait for initial render
-const afterInitialRender = ()=>new Promise((resolve)=>{
-	requestAnimationFrame(()=>{
-		requestAnimationFrame(resolve);
-	});
-});
-
 export const bootstrapAnchorPositioningPolyfill = ()=>{
 	if(supportsAnchorPositioning()) return Promise.resolve(false);
 	if(polyfillPromise) return polyfillPromise;
 
-	polyfillPromise = afterInitialRender()
-		.then(async ()=>{
+	polyfillPromise = (async ()=>{
+		try {
 			const { default: polyfill } = await import('@oddbird/css-anchor-positioning/fn');
 			await polyfill();
 			return true;
-		})
-		.catch((error)=>{
+		} catch (error){
 			polyfillPromise = undefined;
 			throw error;
-		});
+		}
+	})();
 
 	return polyfillPromise;
 };
