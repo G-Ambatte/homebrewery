@@ -145,6 +145,11 @@
 
 	
 	.menu-wrapper {
+		.menu-item:first-child {
+			.caret {
+				display: none;
+			}
+		}
 		.menu-list {
 			padding          : 0px;
 			background-color : #DDDDDD;
@@ -162,6 +167,9 @@
 		cursor      : pointer;
 		width: 100%;
 		.animate(background-color);
+		&:is(.menu-list .menu-item) [class*="name"] {
+			padding-inline: 8px;
+		}
 		.menu-name {
 			flex: 1;
 			text-align: left;
@@ -172,7 +180,6 @@
 			height       : .85rem;
 			font-size    : 1.2em;
 			text-align   : center;
-			&:first-child { margin-right: 5px }
 			&.caret {
 				margin-right: 0;
 			}
