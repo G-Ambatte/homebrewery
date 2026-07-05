@@ -5,7 +5,7 @@
   "type": "module",
   "engines": {
     "npm": ">=10.8 <12",
-    "node": ">=25"
+    "node": ">=26"
   },
   "repository": {
     "type": "git",
