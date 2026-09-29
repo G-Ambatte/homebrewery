@@ -8,6 +8,10 @@ import config  from './config.js';
 import path from 'path';
 import fs      from 'fs-extra';
 
+import { md5 }                           from 'hash-wasm';
+// import { gzipSync, strToU8 }             from 'fflate';
+import { makePatches, stringifyPatches } from '@sanity/diff-match-patch';
+
 const nodeEnv = config.get('node_env');
 const isProd = nodeEnv === 'production';
 
@@ -37,14 +41,14 @@ export default function createAdminApi(vite) {
 			throw { HBErrorCode: '52', code: 401, message: 'Access denied' };
 		}
 	};
-	
+
 	// Search for up to 300 brews that have not been viewed or updated in 30 days and are shorter than 140 bytes
 	const junkBrewsPipeline = [
 		{	$match : {
 			updatedAt  : { $lt: Moment().subtract(30, 'days').toDate() },
 			lastViewed : { $lt: Moment().subtract(30, 'days').toDate() }
 		} },
-		{ $project: { _id: 1, textBinSize: { $binarySize: '$textBin' }, updatedAt: 1, lastViewed: 1} },
+		{ $project: { _id: 1, textBinSize: { $binarySize: '$textBin' }, updatedAt: 1, lastViewed: 1 } },
 		{ $match: { textBinSize: { $lt: 140 } } },
 		{ $limit: 300 }
 	];
@@ -52,14 +56,14 @@ export default function createAdminApi(vite) {
 	// Search for up to 500 unauthored brews that have not been viewed or updated in two years
 	const lostBrewsPipeline = [
 		{
-			$match: {
-				authors: [],
-				updatedAt:  { $lt: Moment().subtract(2, 'years').toDate() },
-				lastViewed: { $lt: Moment().subtract(2, 'years').toDate() }
+			$match : {
+				authors    : [],
+				updatedAt  : { $lt: Moment().subtract(2, 'years').toDate() },
+				lastViewed : { $lt: Moment().subtract(2, 'years').toDate() }
 			}
 		},
 		{
-			$limit: 500
+			$limit : 500
 		}
 	];
 
@@ -70,7 +74,7 @@ export default function createAdminApi(vite) {
 
 	router.get('/admin/cleanupJunk', mw.adminOnly, (req, res)=>{
 		HomebrewModel.aggregate(junkBrewsPipeline).option({ maxTimeMS: 60000 })
-		.then((objs)=>res.json({ count: objs.length, brewCollection : objs }))
+		.then((objs)=>res.json({ count: objs.length, brewCollection: objs }))
 		.catch((error)=>{
 			console.error(error);
 			res.status(500).json({ error: 'Internal Server Error' });
@@ -93,7 +97,7 @@ export default function createAdminApi(vite) {
 
 	router.get('/admin/cleanupLost', mw.adminOnly, (req, res)=>{
 		HomebrewModel.aggregate(lostBrewsPipeline).option({ maxTimeMS: 60000 })
-		.then((objs)=>res.json({ count: objs.length, brewCollection : objs }))
+		.then((objs)=>res.json({ count: objs.length, brewCollection: objs }))
 		.catch((error)=>{
 			console.error(error);
 			res.status(500).json({ error: 'Internal Server Error' });
@@ -138,16 +142,29 @@ export default function createAdminApi(vite) {
 	router.put('/admin/clean/script/:id', asyncHandler(HomebrewAPI.getBrew('admin', false)), async (req, res)=>{
 		console.log(`[ADMIN: ${req.account?.username || 'Not Logged In'}] Cleaning script tags from ShareID ${req.params.id}`);
 
-		function cleanText(text){return text.replaceAll(/(<\/?s)cript/gi, '');};
+		function cleanText(text){return new String(text).replace(/(<\/?s)cript/gi, (match, p1)=>{return p1;});};
 
 		const brew = req.brew;
+		const originalText = brew?.text || '';
 
 		const properties = ['text', 'description', 'title'];
 		properties.forEach((property)=>{
 			brew[property] = cleanText(brew[property]);
 		});
 
-		req.body = brew;
+		const brewToSave = {
+			...brew,
+			text      : brew.text.normalize('NFC'),
+			pageCount : ((brew.renderer === 'legacy' ? brew.text.match(/\\page/g) : brew.text.match(/^(?=\\page(?:break)?(?: *{[^\n{}]*})?$)/gm)) || []).length + 1,
+			patches   : stringifyPatches(makePatches(encodeURI(originalText.normalize('NFC')), encodeURI(brew.text.normalize('NFC')))),
+			hash      : await md5(brew.text.normalize('NFC'))
+		};
+
+		delete brewToSave.textBin;
+
+		console.dir(brewToSave);
+
+		req.body = brewToSave;
 
 		// Remove Account from request to prevent Admin user from being added to brew as an Author
 		req.account = undefined;
